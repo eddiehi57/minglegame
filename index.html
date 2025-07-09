@@ -14,7 +14,6 @@
       font-family: Arial, sans-serif;
     }
 
-    /* Fullscreen background image */
     #background {
       position: fixed;
       top: 0;
@@ -70,9 +69,13 @@
     }
 
     .controls {
+      position: fixed;
+      bottom: 20px;
       display: flex;
-      gap: 10px;
-      margin-top: 20px;
+      gap: 20px;
+      justify-content: center;
+      width: 100%;
+      z-index: 2;
     }
 
     button {
@@ -92,13 +95,57 @@
       position: absolute;
       z-index: 10;
     }
+
+    .music-note {
+      position: absolute;
+      font-size: 32px;
+      color: #fff;
+      opacity: 0.8;
+      animation: floatNote 3s linear infinite;
+      z-index: 1;
+    }
+
+    @keyframes floatNote {
+      0% {
+        transform: translateY(0) translateX(0) scale(1);
+        opacity: 0.9;
+      }
+      50% {
+        transform: translateY(-100px) translateX(30px) scale(1.2);
+        opacity: 0.7;
+      }
+      100% {
+        transform: translateY(-200px) translateX(-20px) scale(0.8);
+        opacity: 0;
+      }
+    }
+
+    .corner-logo {
+      position: fixed;
+      width: 80px;
+      height: auto;
+      bottom: 10px;
+      z-index: 3;
+    }
+
+    .left-logo {
+      left: 10px;
+    }
+
+    .right-logo {
+      right: 10px;
+    }
   </style>
 </head>
 <body>
-  <!-- Background image -->
+  <!-- Background -->
   <div id="background"></div>
 
-  <!-- Foreground content -->
+  <!-- Corner Logos -->
+  <img src="sldsquidlogo.jpg" class="corner-logo left-logo" alt="Logo Left">
+  <img src="sldsquidlogo.jpg" class="corner-logo right-logo" alt="Logo Right">
+
+  <!-- Foreground Content -->
   <div class="content">
     <div class="carousel" id="carousel">
       <div>1</div>
@@ -112,11 +159,12 @@
     </div>
 
     <div id="numberDisplay"></div>
+  </div>
 
-    <div class="controls">
-      <button id="startBtn">Start</button>
-      <button id="stopBtn">Stop</button>
-    </div>
+  <!-- Controls -->
+  <div class="controls">
+    <button id="startBtn">Start</button>
+    <button id="stopBtn">Stop</button>
   </div>
 
   <!-- Audio -->
@@ -134,6 +182,20 @@
     let isRunning = false;
     let numberSequence = [5, 6, 3, 4, 3];
     let sequenceIndex = 0;
+    let noteInterval;
+
+    function createMusicNote() {
+      const note = document.createElement("div");
+      note.className = "music-note";
+      note.style.left = `${Math.random() * window.innerWidth}px`;
+      note.style.top = `${Math.random() * (window.innerHeight - 100) + 50}px`;
+      note.textContent = Math.random() > 0.5 ? "🎵" : "🎶";
+      document.body.appendChild(note);
+
+      setTimeout(() => {
+        note.remove();
+      }, 3000);
+    }
 
     function startGame() {
       if (isRunning) return;
@@ -145,6 +207,8 @@
 
       mingle.currentTime = 0;
       mingle.play();
+
+      noteInterval = setInterval(createMusicNote, 300);
     }
 
     function stopGame() {
@@ -153,8 +217,9 @@
 
       mingle.pause();
       mingle.currentTime = 0;
-
       carousel.style.display = "none";
+
+      clearInterval(noteInterval);
 
       buzzer.play();
 
@@ -166,15 +231,10 @@
     startBtn.addEventListener("click", startGame);
     stopBtn.addEventListener("click", stopGame);
 
-    // Spacebar toggles start/stop
     document.addEventListener("keydown", (e) => {
       if (e.code === "Space") {
         e.preventDefault();
-        if (isRunning) {
-          stopGame();
-        } else {
-          startGame();
-        }
+        isRunning ? stopGame() : startGame();
       }
     });
   </script>

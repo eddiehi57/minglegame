@@ -56,6 +56,10 @@
       transition: opacity 0.3s ease;
     }
 
+    #startBtn {
+      background-color: #28a745;
+    }
+
     .fullscreen button {
       opacity: 0.6;
     }
@@ -121,13 +125,8 @@
       z-index: 3;
     }
 
-    .left-logo {
-      left: 10px;
-    }
-
-    .right-logo {
-      right: 10px;
-    }
+    .left-logo { left: 10px; }
+    .right-logo { right: 10px; }
   </style>
 </head>
 <body>
@@ -187,7 +186,8 @@
     let countdownInterval;
     let countdownTime = 30;
 
-    background.style.backgroundImage = "url('mingle1.jpg')";
+    // Start background image
+    background.style.backgroundImage = "url('minglestart1.jpg')";
 
     function startGame() {
       if (isRunning) return;
@@ -213,7 +213,7 @@
         countdownDisplay.textContent = countdownTime;
         if (countdownTime <= 0) {
           clearInterval(countdownInterval);
-          stopGame();
+          stopGame(); // ⏱ Automatically trigger stop
         }
       }, 1000);
     }
@@ -239,18 +239,17 @@
     function resetGame() {
       isRunning = false;
       clearInterval(countdownInterval);
-      mingle.pause();
-      mingle.currentTime = 0;
-      buzzer.pause();
-      buzzer.currentTime = 0;
-      eliminated.pause();
-      eliminated.currentTime = 0;
+
+      mingle.pause(); mingle.currentTime = 0;
+      buzzer.pause(); buzzer.currentTime = 0;
+      eliminated.pause(); eliminated.currentTime = 0;
 
       countdownDisplay.style.display = "none";
       noteStream.style.display = "none";
       numberDisplay.style.display = "none";
       sequenceIndex = 0;
-      background.style.backgroundImage = "url('mingle1.jpg')";
+
+      background.style.backgroundImage = "url('minglestart1.jpg')";
     }
 
     function enterFullscreen() {

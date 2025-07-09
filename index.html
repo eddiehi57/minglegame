@@ -61,7 +61,7 @@
     }
 
     #resetBtn {
-      background-color: #343a40; /* much darker gray */
+      background-color: #343a40; /* darker gray */
     }
 
     .fullscreen button {
@@ -179,6 +179,7 @@
 
   <!-- Audio -->
   <audio id="mingle" src="mingle.mp3"></audio>
+  <audio id="opendoor" src="opendoor.mp3"></audio>
   <audio id="buzzer" src="buzzer.mp3"></audio>
   <audio id="eliminated" src="eliminated.mp3"></audio>
 
@@ -188,6 +189,7 @@
     const stopBtn = document.getElementById("stopBtn");
 
     const mingle = document.getElementById("mingle");
+    const opendoor = document.getElementById("opendoor");
     const buzzer = document.getElementById("buzzer");
     const eliminated = document.getElementById("eliminated");
 
@@ -231,8 +233,8 @@
       noteStream.style.display = "none";
       background.style.backgroundImage = "url('mingledoor.jpg')";
 
-      buzzer.currentTime = 0;
-      buzzer.play();
+      opendoor.currentTime = 0;
+      opendoor.play();
 
       numberDisplay.textContent = numberSequence[sequenceIndex];
       numberDisplay.style.display = "block";
@@ -270,6 +272,7 @@
       clearInterval(countdownInterval);
 
       mingle.pause(); mingle.currentTime = 0;
+      opendoor.pause(); opendoor.currentTime = 0;
       buzzer.pause(); buzzer.currentTime = 0;
       eliminated.pause(); eliminated.currentTime = 0;
 

@@ -58,7 +58,7 @@
     }
 
     #startBtn {
-      background-color: #28a745;
+      background-color: #28a745; /* Green */
     }
 
     .fullscreen button {
@@ -83,7 +83,10 @@
         0 0 20px green;
       z-index: 4;
       position: absolute;
-      top: 20px;
+      top: 50%;
+      left: 50%;
+      transform: translate(-50%, -50%);
+      display: none;
     }
 
     .note-stream {
@@ -154,7 +157,7 @@
 
   <!-- Content -->
   <div class="content">
-    <div id="countdown" style="display: none;">30</div>
+    <div id="countdown">30</div>
     <div id="numberDisplay"></div>
   </div>
 
@@ -191,6 +194,7 @@
     let countdownInterval;
     let countdownTime = 30;
 
+    // Initial background
     background.style.backgroundImage = "url('minglestart1.jpg')";
 
     function startGame() {
@@ -232,14 +236,14 @@
       isRunning = false;
       clearInterval(countdownInterval);
       countdownDisplay.style.display = "none";
-      mingle.pause();
-      mingle.currentTime = 0;
+      mingle.pause(); mingle.currentTime = 0;
       buzzer.pause(); buzzer.currentTime = 0;
       eliminated.pause(); eliminated.currentTime = 0;
 
       numberDisplay.style.display = "none";
       noteStream.style.display = "none";
       sequenceIndex = 0;
+
       background.style.backgroundImage = "url('minglestart1.jpg')";
     }
 

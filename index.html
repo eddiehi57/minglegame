@@ -53,6 +53,11 @@
       border: none;
       border-radius: 8px;
       cursor: pointer;
+      transition: opacity 0.3s ease;
+    }
+
+    .fullscreen button {
+      opacity: 0.6;
     }
 
     #numberDisplay {
@@ -130,13 +135,13 @@
     <div class="music-note note6">🎶</div>
   </div>
 
-  <!-- Main Content -->
+  <!-- Content -->
   <div class="content">
     <div id="numberDisplay"></div>
   </div>
 
   <!-- Controls -->
-  <div class="controls">
+  <div class="controls" id="controlPanel">
     <button id="startBtn">Start</button>
     <button id="resetBtn">Reset</button>
     <button id="stopBtn">Stop</button>
@@ -159,6 +164,7 @@
     const numberDisplay = document.getElementById("numberDisplay");
     const noteStream = document.getElementById("noteStream");
     const background = document.getElementById("background");
+    const controlPanel = document.getElementById("controlPanel");
 
     let isRunning = false;
     let numberSequence = [5, 6, 3, 4, 3];
@@ -173,9 +179,10 @@
       numberDisplay.style.display = "none";
       noteStream.style.display = "block";
       background.style.backgroundImage = "url('mingle1.jpg')";
-
       mingle.currentTime = 0;
       mingle.play();
+
+      enterFullscreen();
     }
 
     function stopGame() {
@@ -209,6 +216,36 @@
       background.style.backgroundImage = "url('mingle1.jpg')";
     }
 
+    function enterFullscreen() {
+      const elem = document.documentElement;
+      if (elem.requestFullscreen) {
+        elem.requestFullscreen();
+      } else if (elem.webkitRequestFullscreen) {
+        elem.webkitRequestFullscreen();
+      } else if (elem.msRequestFullscreen) {
+        elem.msRequestFullscreen();
+      }
+    }
+
+    function exitFullscreen() {
+      if (document.exitFullscreen) {
+        document.exitFullscreen();
+      } else if (document.webkitExitFullscreen) {
+        document.webkitExitFullscreen();
+      } else if (document.msExitFullscreen) {
+        document.msExitFullscreen();
+      }
+    }
+
+    // Handle fullscreen change to toggle button opacity
+    document.addEventListener("fullscreenchange", () => {
+      if (document.fullscreenElement) {
+        controlPanel.classList.add("fullscreen");
+      } else {
+        controlPanel.classList.remove("fullscreen");
+      }
+    });
+
     startBtn.addEventListener("click", startGame);
     stopBtn.addEventListener("click", stopGame);
     resetBtn.addEventListener("click", resetGame);
@@ -218,7 +255,6 @@
         e.preventDefault();
         isRunning ? stopGame() : startGame();
       }
-
       if (e.code === "ShiftLeft" || e.code === "ShiftRight") {
         eliminated.currentTime = 0;
         eliminated.play();

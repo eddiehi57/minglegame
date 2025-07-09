@@ -62,13 +62,13 @@
       z-index: 10;
     }
 
-    .note-container {
-      position: absolute;
-      width: 400px;
-      height: 400px;
-      top: 50%;
-      left: 50%;
-      transform: translate(-50%, -50%);
+    .note-stream {
+      position: fixed;
+      width: 100%;
+      height: 100%;
+      top: 0;
+      left: 0;
+      overflow: hidden;
       pointer-events: none;
       z-index: 1;
     }
@@ -76,25 +76,28 @@
     .music-note {
       position: absolute;
       font-size: 48px;
-      animation: spinNotes 10s linear infinite;
+      color: white;
       opacity: 0.8;
+      animation: moveNote 8s linear infinite;
     }
 
-    .music-note:nth-child(1) { transform: rotate(0deg) translate(150px); }
-    .music-note:nth-child(2) { transform: rotate(60deg) translate(150px); }
-    .music-note:nth-child(3) { transform: rotate(120deg) translate(150px); }
-    .music-note:nth-child(4) { transform: rotate(180deg) translate(150px); }
-    .music-note:nth-child(5) { transform: rotate(240deg) translate(150px); }
-    .music-note:nth-child(6) { transform: rotate(300deg) translate(150px); }
+    /* Different speeds by assigning different animation durations */
+    .note1 { top: 10%; animation-duration: 6s; }
+    .note2 { top: 25%; animation-duration: 8s; }
+    .note3 { top: 40%; animation-duration: 7s; }
+    .note4 { top: 55%; animation-duration: 9s; }
+    .note5 { top: 70%; animation-duration: 6.5s; }
+    .note6 { top: 85%; animation-duration: 7.5s; }
 
-    @keyframes spinNotes {
-      0% { transform: rotate(0deg); }
-      100% { transform: rotate(360deg); }
+    @keyframes moveNote {
+      0% { left: -50px; opacity: 0.6; }
+      50% { opacity: 1; }
+      100% { left: 110%; opacity: 0; }
     }
 
     .corner-logo {
       position: fixed;
-      width: 80px;
+      width: 120px; /* 50% larger than before */
       height: auto;
       bottom: 10px;
       z-index: 3;
@@ -117,17 +120,19 @@
   <img src="sldsquidlogo.jpg" class="corner-logo left-logo" alt="Logo Left">
   <img src="sldsquidlogo.jpg" class="corner-logo right-logo" alt="Logo Right">
 
+  <!-- Music Notes -->
+  <div class="note-stream" id="noteStream" style="display: none;">
+    <div class="music-note note1">🎵</div>
+    <div class="music-note note2">🎶</div>
+    <div class="music-note note3">🎵</div>
+    <div class="music-note note4">🎶</div>
+    <div class="music-note note5">🎵</div>
+    <div class="music-note note6">🎶</div>
+  </div>
+
   <!-- Foreground Content -->
   <div class="content">
     <div id="numberDisplay"></div>
-    <div class="note-container" id="noteContainer" style="display: none;">
-      <div class="music-note">🎵</div>
-      <div class="music-note">🎶</div>
-      <div class="music-note">🎵</div>
-      <div class="music-note">🎶</div>
-      <div class="music-note">🎵</div>
-      <div class="music-note">🎶</div>
-    </div>
   </div>
 
   <!-- Controls -->
@@ -146,7 +151,7 @@
     const mingle = document.getElementById("mingle");
     const buzzer = document.getElementById("buzzer");
     const numberDisplay = document.getElementById("numberDisplay");
-    const noteContainer = document.getElementById("noteContainer");
+    const noteStream = document.getElementById("noteStream");
 
     let isRunning = false;
     let numberSequence = [5, 6, 3, 4, 3];
@@ -157,7 +162,7 @@
       isRunning = true;
 
       numberDisplay.style.display = "none";
-      noteContainer.style.display = "block";
+      noteStream.style.display = "block";
 
       mingle.currentTime = 0;
       mingle.play();
@@ -170,8 +175,7 @@
       mingle.pause();
       mingle.currentTime = 0;
 
-      noteContainer.style.display = "none";
-
+      noteStream.style.display = "none";
       buzzer.play();
 
       numberDisplay.textContent = numberSequence[sequenceIndex];

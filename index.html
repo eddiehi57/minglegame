@@ -12,7 +12,6 @@
       height: 100%;
       width: 100%;
       font-family: Arial, sans-serif;
-      background-color: black;
     }
 
     #background {
@@ -33,7 +32,7 @@
       justify-content: center;
       height: 100%;
       position: relative;
-      z-index: 3;
+      z-index: 2;
     }
 
     .controls {
@@ -43,7 +42,7 @@
       gap: 20px;
       justify-content: center;
       width: 100%;
-      z-index: 4;
+      z-index: 3;
     }
 
     button {
@@ -57,10 +56,6 @@
       transition: opacity 0.3s ease;
     }
 
-    #startBtn {
-      background-color: #28a745; /* Green */
-    }
-
     .fullscreen button {
       opacity: 0.6;
     }
@@ -70,7 +65,7 @@
       color: #00ffcc;
       display: none;
       position: absolute;
-      z-index: 5;
+      z-index: 10;
       text-shadow: 4px 4px 8px black;
     }
 
@@ -78,10 +73,8 @@
       font-size: 120px;
       font-weight: bold;
       color: red;
-      text-shadow:
-        2px 2px 4px white,
-        0 0 20px green;
-      z-index: 4;
+      text-shadow: 2px 2px 4px white, 0 0 20px green;
+      z-index: 9;
       position: absolute;
       top: 50%;
       left: 50%;
@@ -97,7 +90,7 @@
       left: 0;
       overflow: hidden;
       pointer-events: none;
-      z-index: 2;
+      z-index: 1;
     }
 
     .music-note {
@@ -125,7 +118,7 @@
       width: 120px;
       height: auto;
       bottom: 10px;
-      z-index: 4;
+      z-index: 3;
     }
 
     .left-logo {
@@ -194,57 +187,24 @@
     let countdownInterval;
     let countdownTime = 30;
 
-    // Initial background
-    background.style.backgroundImage = "url('minglestart1.jpg')";
+    background.style.backgroundImage = "url('mingle1.jpg')";
 
     function startGame() {
       if (isRunning) return;
       isRunning = true;
 
       numberDisplay.style.display = "none";
-      noteStream.style.display = "block";
       countdownDisplay.style.display = "block";
       countdownTime = 30;
       countdownDisplay.textContent = countdownTime;
 
+      noteStream.style.display = "block";
       background.style.backgroundImage = "url('mingle1.jpg')";
       mingle.currentTime = 0;
       mingle.play();
+
       enterFullscreen();
       startCountdown();
-    }
-
-    function stopGame() {
-      if (!isRunning) return;
-      isRunning = false;
-
-      clearInterval(countdownInterval);
-      countdownDisplay.style.display = "none";
-      mingle.pause();
-      mingle.currentTime = 0;
-
-      noteStream.style.display = "none";
-      background.style.backgroundImage = "url('mingledoor.jpg')";
-      buzzer.play();
-
-      numberDisplay.textContent = numberSequence[sequenceIndex];
-      numberDisplay.style.display = "block";
-      sequenceIndex = (sequenceIndex + 1) % numberSequence.length;
-    }
-
-    function resetGame() {
-      isRunning = false;
-      clearInterval(countdownInterval);
-      countdownDisplay.style.display = "none";
-      mingle.pause(); mingle.currentTime = 0;
-      buzzer.pause(); buzzer.currentTime = 0;
-      eliminated.pause(); eliminated.currentTime = 0;
-
-      numberDisplay.style.display = "none";
-      noteStream.style.display = "none";
-      sequenceIndex = 0;
-
-      background.style.backgroundImage = "url('minglestart1.jpg')";
     }
 
     function startCountdown() {
@@ -256,6 +216,41 @@
           stopGame();
         }
       }, 1000);
+    }
+
+    function stopGame() {
+      if (!isRunning) return;
+      isRunning = false;
+
+      clearInterval(countdownInterval);
+      countdownDisplay.style.display = "none";
+      mingle.pause();
+      mingle.currentTime = 0;
+      noteStream.style.display = "none";
+
+      background.style.backgroundImage = "url('mingledoor.jpg')";
+      buzzer.play();
+
+      numberDisplay.textContent = numberSequence[sequenceIndex];
+      numberDisplay.style.display = "block";
+      sequenceIndex = (sequenceIndex + 1) % numberSequence.length;
+    }
+
+    function resetGame() {
+      isRunning = false;
+      clearInterval(countdownInterval);
+      mingle.pause();
+      mingle.currentTime = 0;
+      buzzer.pause();
+      buzzer.currentTime = 0;
+      eliminated.pause();
+      eliminated.currentTime = 0;
+
+      countdownDisplay.style.display = "none";
+      noteStream.style.display = "none";
+      numberDisplay.style.display = "none";
+      sequenceIndex = 0;
+      background.style.backgroundImage = "url('mingle1.jpg')";
     }
 
     function enterFullscreen() {

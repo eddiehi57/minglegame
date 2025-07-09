@@ -5,27 +5,42 @@
   <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
   <title>Squid Game Merry-Go-Round</title>
   <style>
-    body {
+    html, body {
       margin: 0;
-      background: black;
-      color: white;
-      font-family: Arial, sans-serif;
+      padding: 0;
       overflow: hidden;
+      height: 100%;
+      width: 100%;
+      font-family: Arial, sans-serif;
+    }
+
+    /* Fullscreen background image */
+    #background {
+      position: fixed;
+      top: 0;
+      left: 0;
+      width: 100vw;
+      height: 100vh;
+      background: url('mingle1.jpg') no-repeat center center;
+      background-size: cover;
+      z-index: -1;
+    }
+
+    .content {
       display: flex;
       flex-direction: column;
       align-items: center;
       justify-content: center;
-      height: 100vh;
+      height: 100%;
+      position: relative;
     }
 
     .carousel {
       position: relative;
       width: 300px;
       height: 300px;
-      margin-bottom: 20px;
       animation: spin 20s linear infinite;
       border-radius: 50%;
-      border: 4px solid #fff;
       display: none;
     }
 
@@ -33,7 +48,7 @@
       position: absolute;
       width: 40px;
       height: 40px;
-      background: red;
+      background: rgba(255, 0, 0, 0.8);
       border-radius: 50%;
       text-align: center;
       line-height: 40px;
@@ -54,6 +69,12 @@
       to { transform: rotate(360deg); }
     }
 
+    .controls {
+      display: flex;
+      gap: 10px;
+      margin-top: 20px;
+    }
+
     button {
       padding: 10px 20px;
       font-size: 18px;
@@ -69,78 +90,93 @@
       color: #00ffcc;
       display: none;
       position: absolute;
+      z-index: 10;
     }
   </style>
 </head>
 <body>
-  <div class="carousel" id="carousel">
-    <div>1</div>
-    <div>2</div>
-    <div>3</div>
-    <div>4</div>
-    <div>5</div>
-    <div>6</div>
-    <div>7</div>
-    <div>8</div>
+  <!-- Background image -->
+  <div id="background"></div>
+
+  <!-- Foreground content -->
+  <div class="content">
+    <div class="carousel" id="carousel">
+      <div>1</div>
+      <div>2</div>
+      <div>3</div>
+      <div>4</div>
+      <div>5</div>
+      <div>6</div>
+      <div>7</div>
+      <div>8</div>
+    </div>
+
+    <div id="numberDisplay"></div>
+
+    <div class="controls">
+      <button id="startBtn">Start</button>
+      <button id="stopBtn">Stop</button>
+    </div>
   </div>
 
-  <div id="numberDisplay"></div>
-
-  <button id="toggleBtn">Start</button>
-
+  <!-- Audio -->
   <audio id="mingle" src="mingle.mp3"></audio>
   <audio id="buzzer" src="buzzer.mp3"></audio>
 
   <script>
-    const toggleBtn = document.getElementById("toggleBtn");
+    const startBtn = document.getElementById("startBtn");
+    const stopBtn = document.getElementById("stopBtn");
     const carousel = document.getElementById("carousel");
     const mingle = document.getElementById("mingle");
     const buzzer = document.getElementById("buzzer");
     const numberDisplay = document.getElementById("numberDisplay");
 
     let isRunning = false;
-    let timeoutId;
     let numberSequence = [5, 6, 3, 4, 3];
     let sequenceIndex = 0;
 
-    toggleBtn.addEventListener("click", () => {
-      if (!isRunning) {
-        startGame();
-      } else {
-        stopGame(true);
-      }
-    });
-
     function startGame() {
+      if (isRunning) return;
       isRunning = true;
-      toggleBtn.textContent = "Stop";
+
       numberDisplay.style.display = "none";
       carousel.style.display = "block";
       carousel.style.animationPlayState = "running";
 
       mingle.currentTime = 0;
       mingle.play();
-
-      timeoutId = setTimeout(() => {
-        stopGame(false);
-      }, 20000);
     }
 
-    function stopGame(manual) {
+    function stopGame() {
+      if (!isRunning) return;
       isRunning = false;
-      toggleBtn.textContent = "Start";
-      clearTimeout(timeoutId);
+
       mingle.pause();
       mingle.currentTime = 0;
+
       carousel.style.display = "none";
 
-      if (!manual) {
-        buzzer.play();
-        numberDisplay.textContent = numberSequence[sequenceIndex];
-        numberDisplay.style.display = "block";
-        sequenceIndex = (sequenceIndex + 1) % numberSequence.length;
-      }
+      buzzer.play();
+
+      numberDisplay.textContent = numberSequence[sequenceIndex];
+      numberDisplay.style.display = "block";
+      sequenceIndex = (sequenceIndex + 1) % numberSequence.length;
     }
+
+    startBtn.addEventListener("click", startGame);
+    stopBtn.addEventListener("click", stopGame);
+
+    // Spacebar toggles start/stop
+    document.addEventListener("keydown", (e) => {
+      if (e.code === "Space") {
+        e.preventDefault();
+        if (isRunning) {
+          stopGame();
+        } else {
+          startGame();
+        }
+      }
+    });
   </script>
 </body>
 </html>

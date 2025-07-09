@@ -34,40 +34,6 @@
       position: relative;
     }
 
-    .carousel {
-      position: relative;
-      width: 300px;
-      height: 300px;
-      animation: spin 20s linear infinite;
-      border-radius: 50%;
-      display: none;
-    }
-
-    .carousel div {
-      position: absolute;
-      width: 40px;
-      height: 40px;
-      background: rgba(255, 0, 0, 0.8);
-      border-radius: 50%;
-      text-align: center;
-      line-height: 40px;
-      font-weight: bold;
-    }
-
-    .carousel div:nth-child(1) { top: 0; left: 130px; }
-    .carousel div:nth-child(2) { top: 60px; left: 220px; }
-    .carousel div:nth-child(3) { top: 150px; left: 250px; }
-    .carousel div:nth-child(4) { top: 240px; left: 220px; }
-    .carousel div:nth-child(5) { top: 300px; left: 130px; }
-    .carousel div:nth-child(6) { top: 240px; left: 40px; }
-    .carousel div:nth-child(7) { top: 150px; left: 10px; }
-    .carousel div:nth-child(8) { top: 60px; left: 40px; }
-
-    @keyframes spin {
-      from { transform: rotate(0deg); }
-      to { transform: rotate(360deg); }
-    }
-
     .controls {
       position: fixed;
       bottom: 20px;
@@ -89,35 +55,41 @@
     }
 
     #numberDisplay {
-      font-size: 100px;
+      font-size: 200px;
       color: #00ffcc;
       display: none;
       position: absolute;
       z-index: 10;
     }
 
-    .music-note {
+    .note-container {
       position: absolute;
-      font-size: 32px;
-      color: #fff;
-      opacity: 0.8;
-      animation: floatNote 3s linear infinite;
+      width: 400px;
+      height: 400px;
+      top: 50%;
+      left: 50%;
+      transform: translate(-50%, -50%);
+      pointer-events: none;
       z-index: 1;
     }
 
-    @keyframes floatNote {
-      0% {
-        transform: translateY(0) translateX(0) scale(1);
-        opacity: 0.9;
-      }
-      50% {
-        transform: translateY(-100px) translateX(30px) scale(1.2);
-        opacity: 0.7;
-      }
-      100% {
-        transform: translateY(-200px) translateX(-20px) scale(0.8);
-        opacity: 0;
-      }
+    .music-note {
+      position: absolute;
+      font-size: 48px;
+      animation: spinNotes 10s linear infinite;
+      opacity: 0.8;
+    }
+
+    .music-note:nth-child(1) { transform: rotate(0deg) translate(150px); }
+    .music-note:nth-child(2) { transform: rotate(60deg) translate(150px); }
+    .music-note:nth-child(3) { transform: rotate(120deg) translate(150px); }
+    .music-note:nth-child(4) { transform: rotate(180deg) translate(150px); }
+    .music-note:nth-child(5) { transform: rotate(240deg) translate(150px); }
+    .music-note:nth-child(6) { transform: rotate(300deg) translate(150px); }
+
+    @keyframes spinNotes {
+      0% { transform: rotate(0deg); }
+      100% { transform: rotate(360deg); }
     }
 
     .corner-logo {
@@ -141,24 +113,21 @@
   <!-- Background -->
   <div id="background"></div>
 
-  <!-- Corner Logos -->
+  <!-- Logos -->
   <img src="sldsquidlogo.jpg" class="corner-logo left-logo" alt="Logo Left">
   <img src="sldsquidlogo.jpg" class="corner-logo right-logo" alt="Logo Right">
 
   <!-- Foreground Content -->
   <div class="content">
-    <div class="carousel" id="carousel">
-      <div>1</div>
-      <div>2</div>
-      <div>3</div>
-      <div>4</div>
-      <div>5</div>
-      <div>6</div>
-      <div>7</div>
-      <div>8</div>
-    </div>
-
     <div id="numberDisplay"></div>
+    <div class="note-container" id="noteContainer" style="display: none;">
+      <div class="music-note">🎵</div>
+      <div class="music-note">🎶</div>
+      <div class="music-note">🎵</div>
+      <div class="music-note">🎶</div>
+      <div class="music-note">🎵</div>
+      <div class="music-note">🎶</div>
+    </div>
   </div>
 
   <!-- Controls -->
@@ -174,41 +143,24 @@
   <script>
     const startBtn = document.getElementById("startBtn");
     const stopBtn = document.getElementById("stopBtn");
-    const carousel = document.getElementById("carousel");
     const mingle = document.getElementById("mingle");
     const buzzer = document.getElementById("buzzer");
     const numberDisplay = document.getElementById("numberDisplay");
+    const noteContainer = document.getElementById("noteContainer");
 
     let isRunning = false;
     let numberSequence = [5, 6, 3, 4, 3];
     let sequenceIndex = 0;
-    let noteInterval;
-
-    function createMusicNote() {
-      const note = document.createElement("div");
-      note.className = "music-note";
-      note.style.left = `${Math.random() * window.innerWidth}px`;
-      note.style.top = `${Math.random() * (window.innerHeight - 100) + 50}px`;
-      note.textContent = Math.random() > 0.5 ? "🎵" : "🎶";
-      document.body.appendChild(note);
-
-      setTimeout(() => {
-        note.remove();
-      }, 3000);
-    }
 
     function startGame() {
       if (isRunning) return;
       isRunning = true;
 
       numberDisplay.style.display = "none";
-      carousel.style.display = "block";
-      carousel.style.animationPlayState = "running";
+      noteContainer.style.display = "block";
 
       mingle.currentTime = 0;
       mingle.play();
-
-      noteInterval = setInterval(createMusicNote, 300);
     }
 
     function stopGame() {
@@ -217,9 +169,8 @@
 
       mingle.pause();
       mingle.currentTime = 0;
-      carousel.style.display = "none";
 
-      clearInterval(noteInterval);
+      noteContainer.style.display = "none";
 
       buzzer.play();
 

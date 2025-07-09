@@ -116,7 +116,7 @@
   <!-- Background -->
   <div id="background"></div>
 
-  <!-- Corner Logos -->
+  <!-- Logos -->
   <img src="sldsquidlogo.jpg" class="corner-logo left-logo" alt="Logo Left">
   <img src="sldsquidlogo.jpg" class="corner-logo right-logo" alt="Logo Right">
 
@@ -130,7 +130,7 @@
     <div class="music-note note6">🎶</div>
   </div>
 
-  <!-- Content -->
+  <!-- Main Content -->
   <div class="content">
     <div id="numberDisplay"></div>
   </div>
@@ -138,18 +138,24 @@
   <!-- Controls -->
   <div class="controls">
     <button id="startBtn">Start</button>
+    <button id="resetBtn">Reset</button>
     <button id="stopBtn">Stop</button>
   </div>
 
   <!-- Audio -->
   <audio id="mingle" src="mingle.mp3"></audio>
   <audio id="buzzer" src="buzzer.mp3"></audio>
+  <audio id="eliminated" src="eliminated.mp3"></audio>
 
   <script>
     const startBtn = document.getElementById("startBtn");
+    const resetBtn = document.getElementById("resetBtn");
     const stopBtn = document.getElementById("stopBtn");
+
     const mingle = document.getElementById("mingle");
     const buzzer = document.getElementById("buzzer");
+    const eliminated = document.getElementById("eliminated");
+
     const numberDisplay = document.getElementById("numberDisplay");
     const noteStream = document.getElementById("noteStream");
     const background = document.getElementById("background");
@@ -158,7 +164,6 @@
     let numberSequence = [5, 6, 3, 4, 3];
     let sequenceIndex = 0;
 
-    // Set default background
     background.style.backgroundImage = "url('mingle1.jpg')";
 
     function startGame() {
@@ -167,7 +172,6 @@
 
       numberDisplay.style.display = "none";
       noteStream.style.display = "block";
-
       background.style.backgroundImage = "url('mingle1.jpg')";
 
       mingle.currentTime = 0;
@@ -180,23 +184,44 @@
 
       mingle.pause();
       mingle.currentTime = 0;
-
       noteStream.style.display = "none";
       background.style.backgroundImage = "url('mingledoor.jpg')";
-      buzzer.play();
 
+      buzzer.play();
       numberDisplay.textContent = numberSequence[sequenceIndex];
       numberDisplay.style.display = "block";
+
       sequenceIndex = (sequenceIndex + 1) % numberSequence.length;
+    }
+
+    function resetGame() {
+      isRunning = false;
+      mingle.pause();
+      mingle.currentTime = 0;
+      buzzer.pause();
+      buzzer.currentTime = 0;
+      eliminated.pause();
+      eliminated.currentTime = 0;
+
+      noteStream.style.display = "none";
+      numberDisplay.style.display = "none";
+      sequenceIndex = 0;
+      background.style.backgroundImage = "url('mingle1.jpg')";
     }
 
     startBtn.addEventListener("click", startGame);
     stopBtn.addEventListener("click", stopGame);
+    resetBtn.addEventListener("click", resetGame);
 
     document.addEventListener("keydown", (e) => {
       if (e.code === "Space") {
         e.preventDefault();
         isRunning ? stopGame() : startGame();
+      }
+
+      if (e.code === "ShiftLeft" || e.code === "ShiftRight") {
+        eliminated.currentTime = 0;
+        eliminated.play();
       }
     });
   </script>

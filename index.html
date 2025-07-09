@@ -1,7 +1,7 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-  <meta charset="UTF" />
+  <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
   <title>Squid Game Merry-Go-Round</title>
   <style>
@@ -20,8 +20,8 @@
       left: 0;
       width: 100vw;
       height: 100vh;
-      background: url('mingle1.jpg') no-repeat center center;
       background-size: cover;
+      background-position: center;
       z-index: -1;
     }
 
@@ -32,6 +32,7 @@
       justify-content: center;
       height: 100%;
       position: relative;
+      z-index: 2;
     }
 
     .controls {
@@ -41,7 +42,7 @@
       gap: 20px;
       justify-content: center;
       width: 100%;
-      z-index: 2;
+      z-index: 3;
     }
 
     button {
@@ -60,6 +61,7 @@
       display: none;
       position: absolute;
       z-index: 10;
+      text-shadow: 4px 4px 8px black;
     }
 
     .note-stream {
@@ -75,12 +77,11 @@
 
     .music-note {
       position: absolute;
-      font-size: 96px; /* Twice as large */
+      font-size: 96px;
       opacity: 0.85;
       animation: moveNoteLeft 8s linear infinite;
     }
 
-    /* Individual note styles with varied speeds and vertical placement */
     .note1 { top: 10%; animation-duration: 6s; color: hotpink; }
     .note2 { top: 25%; animation-duration: 8s; color: limegreen; }
     .note3 { top: 40%; animation-duration: 7s; color: black; }
@@ -151,10 +152,14 @@
     const buzzer = document.getElementById("buzzer");
     const numberDisplay = document.getElementById("numberDisplay");
     const noteStream = document.getElementById("noteStream");
+    const background = document.getElementById("background");
 
     let isRunning = false;
     let numberSequence = [5, 6, 3, 4, 3];
     let sequenceIndex = 0;
+
+    // Set default background
+    background.style.backgroundImage = "url('mingle1.jpg')";
 
     function startGame() {
       if (isRunning) return;
@@ -162,6 +167,8 @@
 
       numberDisplay.style.display = "none";
       noteStream.style.display = "block";
+
+      background.style.backgroundImage = "url('mingle1.jpg')";
 
       mingle.currentTime = 0;
       mingle.play();
@@ -175,6 +182,7 @@
       mingle.currentTime = 0;
 
       noteStream.style.display = "none";
+      background.style.backgroundImage = "url('mingledoor.jpg')";
       buzzer.play();
 
       numberDisplay.textContent = numberSequence[sequenceIndex];

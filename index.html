@@ -1,7 +1,7 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-  <meta charset="UTF-8" />
+  <meta charset="UTF" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
   <title>Squid Game Merry-Go-Round</title>
   <style>
@@ -75,29 +75,28 @@
 
     .music-note {
       position: absolute;
-      font-size: 48px;
-      color: white;
-      opacity: 0.8;
-      animation: moveNote 8s linear infinite;
+      font-size: 96px; /* Twice as large */
+      opacity: 0.85;
+      animation: moveNoteLeft 8s linear infinite;
     }
 
-    /* Different speeds by assigning different animation durations */
-    .note1 { top: 10%; animation-duration: 6s; }
-    .note2 { top: 25%; animation-duration: 8s; }
-    .note3 { top: 40%; animation-duration: 7s; }
-    .note4 { top: 55%; animation-duration: 9s; }
-    .note5 { top: 70%; animation-duration: 6.5s; }
-    .note6 { top: 85%; animation-duration: 7.5s; }
+    /* Individual note styles with varied speeds and vertical placement */
+    .note1 { top: 10%; animation-duration: 6s; color: hotpink; }
+    .note2 { top: 25%; animation-duration: 8s; color: limegreen; }
+    .note3 { top: 40%; animation-duration: 7s; color: black; }
+    .note4 { top: 55%; animation-duration: 9s; color: hotpink; }
+    .note5 { top: 70%; animation-duration: 6.5s; color: limegreen; }
+    .note6 { top: 85%; animation-duration: 7.5s; color: black; }
 
-    @keyframes moveNote {
-      0% { left: -50px; opacity: 0.6; }
+    @keyframes moveNoteLeft {
+      0% { left: 110%; opacity: 0.7; }
       50% { opacity: 1; }
-      100% { left: 110%; opacity: 0; }
+      100% { left: -60px; opacity: 0; }
     }
 
     .corner-logo {
       position: fixed;
-      width: 120px; /* 50% larger than before */
+      width: 120px;
       height: auto;
       bottom: 10px;
       z-index: 3;
@@ -116,7 +115,7 @@
   <!-- Background -->
   <div id="background"></div>
 
-  <!-- Logos -->
+  <!-- Corner Logos -->
   <img src="sldsquidlogo.jpg" class="corner-logo left-logo" alt="Logo Left">
   <img src="sldsquidlogo.jpg" class="corner-logo right-logo" alt="Logo Right">
 
@@ -130,7 +129,7 @@
     <div class="music-note note6">🎶</div>
   </div>
 
-  <!-- Foreground Content -->
+  <!-- Content -->
   <div class="content">
     <div id="numberDisplay"></div>
   </div>

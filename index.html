@@ -61,7 +61,7 @@
     }
 
     #resetBtn {
-      background-color: #343a40; /* darker gray */
+      background-color: #343a40;
     }
 
     .fullscreen button {
@@ -146,14 +146,11 @@
   </style>
 </head>
 <body>
-  <!-- Background -->
   <div id="background"></div>
 
-  <!-- Logos -->
   <img src="sldsquidlogo.jpg" class="corner-logo left-logo" alt="Logo Left">
   <img src="sldsquidlogo.jpg" class="corner-logo right-logo" alt="Logo Right">
 
-  <!-- Music Notes -->
   <div class="note-stream" id="noteStream" style="display: none;">
     <div class="music-note note1">🎵</div>
     <div class="music-note note2">🎶</div>
@@ -163,21 +160,18 @@
     <div class="music-note note6">🎶</div>
   </div>
 
-  <!-- Content -->
   <div class="content">
     <div id="countdownLeft" class="countdown"></div>
     <div id="numberDisplay"></div>
     <div id="countdownRight" class="countdown"></div>
   </div>
 
-  <!-- Controls -->
   <div class="controls" id="controlPanel">
     <button id="startBtn">Start</button>
     <button id="resetBtn">Reset</button>
     <button id="stopBtn">Stop</button>
   </div>
 
-  <!-- Audio -->
   <audio id="mingle" src="mingle.mp3"></audio>
   <audio id="opendoor" src="opendoor.mp3"></audio>
   <audio id="buzzer" src="buzzer.mp3"></audio>
@@ -204,7 +198,8 @@
     let numberSequence = [5, 6, 3, 4, 3];
     let sequenceIndex = 0;
     let countdownInterval;
-    let countdownTime = 30;
+    let countdownTime;
+    let roundCount = 0;
 
     background.style.backgroundImage = "url('minglestart1.jpg')";
 
@@ -227,6 +222,7 @@
     function stopGame() {
       if (!isRunning) return;
       isRunning = false;
+      roundCount++;
 
       mingle.pause();
       mingle.currentTime = 0;
@@ -240,7 +236,9 @@
       numberDisplay.style.display = "block";
       sequenceIndex = (sequenceIndex + 1) % numberSequence.length;
 
-      countdownTime = 30;
+      // First round = 30 sec, others = 20
+      countdownTime = roundCount === 1 ? 30 : 20;
+
       countdownLeft.textContent = countdownTime;
       countdownRight.textContent = countdownTime;
       countdownLeft.style.display = "block";
@@ -280,6 +278,8 @@
       countdownRight.style.display = "none";
       numberDisplay.style.display = "none";
       noteStream.style.display = "none";
+
+      roundCount = 0;
       sequenceIndex = 0;
 
       background.style.backgroundImage = "url('minglestart1.jpg')";
